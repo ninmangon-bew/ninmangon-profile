@@ -1,9 +1,27 @@
 {
-  "name": "nilmangkorn-portfolio",
+  "name": "ninmangon-portfolio",
+  "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "NILMANGKORN portfolio site",
+  "description": "NINMANGON portfolio site",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "dev": "node dev-server.js"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans-thai": "^5.2.5",
+    "@fontsource/noto-serif-thai": "^5.2.5",
+    "astro": "^7.2.4",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.11"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }

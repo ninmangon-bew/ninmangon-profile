@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+import { COPY, type Lang } from "../content/copy";
+import ninSeeView from "../assets/images/nin-see-view.png";
+import stoneBaseDark from "../assets/images/stone-base-dark.png";
+import stoneBaseLight from "../assets/images/stone-base-light.png";
+import footerHeroDark from "../assets/images/footer-hero-section-dark.png";
+import footerHeroLight from "../assets/images/footer-hero-section-light.png";
+import iconMail from "../assets/vectors/icon-mail.svg?raw";
+import iconPhone from "../assets/vectors/icon-phone.svg?raw";
+import iconLinkedin from "../assets/vectors/icon-linkedin.svg?raw";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = COPY[lang];
+---
+
+<section id="contact" class="contact-section">
+  <Image src={footerHeroDark} alt="" class="contact-footer-bg bg-variant-dark" />
+  <Image src={footerHeroLight} alt="" class="contact-footer-bg bg-variant-light" />
+  <div class="contact-bg"></div>
+  <div class="contact-grid">
+    <div class="contact-copy" data-reveal="contact">
+      <h2 class="section-title contact-title">{t.contact.title}</h2>
+      <p class="body-text">{t.contact.desc}</p>
+      <div class="contact-actions">
+        <a href="mailto:bewblue12@gmail.com" class="btn btn-primary">
+          <span class="btn-icon" set:html={iconMail} />
+          bewblue12@gmail.com
+        </a>
+        <a href="tel:0944623916" class="btn btn-secondary">
+          <span class="btn-icon" set:html={iconPhone} />
+          094 462 3916
+        </a>
+        <a href="https://www.linkedin.com/in/nadchanon-susutlertpanya-52257a322" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <span class="btn-icon" set:html={iconLinkedin} />
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-visual">
+    <div class="contact-stone-wrap">
+      <Image src={stoneBaseDark} alt="" class="contact-stone bg-variant-dark" />
+      <Image src={stoneBaseLight} alt="" class="contact-stone bg-variant-light" />
+      <Image src={ninSeeView} alt={lang === "th" ? "นิลมังกรยืนมองวิวอยู่บนหิน" : "NinMangon standing on a rock, looking out at the view"} class="contact-dragon-img" />
+    </div>
+  </div>
+</section>

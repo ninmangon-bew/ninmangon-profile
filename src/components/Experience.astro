@@ -1,0 +1,103 @@
+---
+import { Image } from "astro:assets";
+import { COPY, ELEMENTS, type Lang } from "../content/copy";
+import { ELEMENT_VECTORS } from "../content/elementVectors";
+import { formatJourneyDate } from "../content/duration";
+import logoOCI from "../assets/images/logo-OCI.png";
+import logoPlaywork from "../assets/images/logo-playwork.png";
+import logoThinknet from "../assets/images/logo-thinknet.png";
+import logoKMITL from "../assets/images/logo-KMITL.png";
+import ninWindPractice from "../assets/images/nin-wind-practice.png";
+import windEffect from "../assets/images/wind.png";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = COPY[lang];
+const wind = ELEMENTS[lang].find((e) => e.key === "wind")!;
+const accent = `var(${wind.cssVar})`;
+
+// keyed by the exact org string in copy.ts — company names stay in English
+// in both languages, so one map covers en and th
+const orgLogos: Record<string, ImageMetadata> = {
+  "Orange Cap Innovative Co., Ltd.": logoOCI,
+  "Playwork Co., Ltd.": logoPlaywork,
+  "THiNKNET Co., Ltd.": logoThinknet,
+};
+---
+
+<section id="experience" class="experience-section">
+  <span class="icon-intro" style={`color:${accent}`} set:html={ELEMENT_VECTORS.wind} aria-hidden="true" />
+  <span class="icon-intro-label" style={`color:${accent}`} aria-hidden="true">{t.experience.kicker}</span>
+  <div class="section-inner">
+    <div class="section-heading">
+      <span class="section-symbol" style={`color:${accent}`} set:html={ELEMENT_VECTORS.wind} />
+      <p class="kicker" style={`color:${accent}`}>{t.experience.kicker}</p>
+    </div>
+    <h2 class="section-title" style={`color:${accent}`} data-reveal="experience-head">{t.experience.title}</h2>
+
+    <div class="experience-grid">
+      <div class="experience-copy">
+        <div class="experience-intro" data-reveal="experience-head">
+          <p class="element-section-desc">{wind.desc}</p>
+        </div>
+
+        <h3 class="experience-sub-title" data-reveal="experience-head">{t.experience.timelineLabel}</h3>
+        <div class="timeline">
+          {t.experience.timeline.map((j) => {
+            const date = formatJourneyDate(j.start, j.end, lang);
+            return (
+            <div class="timeline-item" data-reveal="experience-head">
+              <div class="timeline-year">
+                <span class="timeline-range">{date.range}</span>
+                <span class="timeline-span">{date.duration}</span>
+              </div>
+              <div class="timeline-rail">
+                <span class="timeline-line"></span>
+                <span class="timeline-dot"></span>
+              </div>
+              <div class="timeline-content">
+                <div class="entry-header">
+                  {orgLogos[j.org] && <Image src={orgLogos[j.org]} alt="" class="org-logo" width={96} height={96} />}
+                  <div class="entry-header-text">
+                    <p class="timeline-role">{j.role}</p>
+                    <p class="timeline-org">{j.org}</p>
+                  </div>
+                </div>
+                <ul class="timeline-bullets">
+                  {j.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div class="wind-scene" aria-hidden="true" data-reveal="experience-head">
+        <Image src={windEffect} alt="" class="wind-effect-img" width={300} height={300} />
+        <Image src={ninWindPractice} alt="" class="wind-dragon-img" width={500} height={500} />
+      </div>
+    </div>
+
+    <h3 class="experience-sub-title" data-reveal="experience-head">{t.experience.educationLabel}</h3>
+    <div class="education-grid">
+      {t.experience.education.map((ed) => (
+        <div class="education-card" data-reveal="experience-education">
+          <div class="entry-header">
+            <Image src={logoKMITL} alt="" class="org-logo" width={96} height={96} />
+            <div class="entry-header-text">
+              <p class="education-degree">{ed.degree}</p>
+              <p class="education-school">{ed.school}</p>
+            </div>
+          </div>
+          <p class="education-meta">{ed.duration}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

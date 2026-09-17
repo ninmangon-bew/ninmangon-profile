@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import { COPY, BRAND, ELEMENTS, type Lang } from "../content/copy";
+import { ELEMENT_IMAGES } from "../content/elementImages";
+import ninMeditate from "../assets/images/nin-meditate.png";
+import baseLight from "../assets/images/base-light.png";
+import baseDark from "../assets/images/base-dark.png";
+import headerHeroLight from "../assets/images/header-hero-section-light.png";
+import headerHeroDark from "../assets/images/header-hero-section-dark.png";
+import footerHeroLight from "../assets/images/footer-hero-section-light.png";
+import footerHeroDark from "../assets/images/footer-hero-section-dark.png";
+import theSun from "../assets/images/the-sun.png";
+import theMoon from "../assets/images/the-moon.png";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = COPY[lang];
+const els = ELEMENTS[lang];
+---
+
+<section id="home" class="hero">
+  <Image src={headerHeroDark} alt="" class="hero-header-bg bg-variant-dark" loading="eager" fetchpriority="high" />
+  <Image src={headerHeroLight} alt="" class="hero-header-bg bg-variant-light" loading="eager" fetchpriority="high" />
+  <Image src={footerHeroDark} alt="" class="hero-footer-bg bg-variant-dark" loading="eager" fetchpriority="high" />
+  <Image src={footerHeroLight} alt="" class="hero-footer-bg bg-variant-light" loading="eager" fetchpriority="high" />
+  <div class="sun-moon-orbit">
+    <Image src={theMoon} alt="" class="celestial celestial-moon" width={150} height={150} />
+    <Image src={theSun} alt="" class="celestial celestial-sun" width={150} height={150} />
+  </div>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1 class="kicker">{t.hero.kicker}</h1>
+      <p class="hero-title">{BRAND[lang]}</p>
+      <p class="hero-role">{t.hero.role}</p>
+      <p class="hero-desc">{t.hero.desc}</p>
+      <div class="hero-actions">
+        <a href="https://peachn.co/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">{t.hero.ctaWork}</a>
+        <button type="button" class="btn btn-secondary">{t.hero.ctaCV}</button>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroVisual">
+      <div class="hero-glow"></div>
+      <div class="element-orbit">
+        {els.map((e, i) => (
+          <div class="element-orbit-item" style={`--angle:${i * 90}deg`}>
+            <Image src={ELEMENT_IMAGES[e.key as keyof typeof ELEMENT_IMAGES]} alt={e.thai} class="element-glyph" width={120} height={120} />
+          </div>
+        ))}
+      </div>
+      <Image src={baseDark} alt="" class="hero-base bg-variant-dark" loading="eager" fetchpriority="high" />
+      <Image src={baseLight} alt="" class="hero-base bg-variant-light" loading="eager" fetchpriority="high" />
+      <Image src={ninMeditate} alt={lang === "th" ? "นิลมังกรกำลังนั่งสมาธิ" : "NinMangon meditating"} class="hero-img" loading="eager" fetchpriority="high" />
+    </div>
+  </div>
+  <a href="#passion" class="scroll-indicator" aria-label={t.scroll}>
+    <span class="scroll-mouse"><span class="scroll-wheel"></span></span>
+    <span class="scroll-label">{t.scroll}</span>
+  </a>
+</section>

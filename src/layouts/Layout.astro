@@ -1,0 +1,103 @@
+---
+import "@fontsource/noto-serif-thai/400.css";
+import "@fontsource/noto-serif-thai/600.css";
+import "@fontsource/ibm-plex-sans-thai/300.css";
+import "@fontsource/ibm-plex-sans-thai/400.css";
+import "@fontsource/ibm-plex-sans-thai/500.css";
+import "@fontsource/ibm-plex-sans-thai/600.css";
+import "../styles/global.css";
+import type { Lang } from "../content/copy";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const { lang, title, description, ogImage = "/og-image.png" } = Astro.props;
+
+const site = Astro.site ?? new URL("http://localhost:4321");
+const canonicalURL = new URL(lang === "en" ? "/" : "/th/", site).toString();
+const enURL = new URL("/", site).toString();
+const thURL = new URL("/th/", site).toString();
+const ogImageURL = new URL(ogImage, site).toString();
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Nadchanon Susutlertpanya",
+  alternateName: ["นัสชานนท์ สุสุตเลิศปัญญา", "NINMANGON", "นิลมังกร"],
+  jobTitle: "Senior UX/UI Designer",
+  url: enURL,
+  image: ogImageURL,
+  sameAs: ["https://www.linkedin.com/in/nadchanon-susutlertpanya-52257a322"],
+};
+
+// unset until a real GA4 property exists — see .env.example. Reads at build
+// time (PUBLIC_ prefix required for Astro to expose it client-side), so no
+// gtag script ships at all until the env var is actually set on the host.
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined;
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+<link rel="alternate" hreflang="en" href={enURL} />
+<link rel="alternate" hreflang="th" href={thURL} />
+<link rel="alternate" hreflang="x-default" href={enURL} />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={lang === "th" ? "th_TH" : "en_US"} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="theme-color" content="#0B0A09" />
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
+{gaId && (
+  <>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} is:inline></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", gaId);
+    </script>
+  </>
+)}
+<script is:inline>
+  (function () {
+    document.documentElement.classList.add("js");
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    var theme = saved === "light" || saved === "dark" ? saved : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+</head>
+<body>
+<div class="paper-backdrop" aria-hidden="true"></div>
+<div class="paper-accent" aria-hidden="true"></div>
+<div class="paper-burn-overlay" aria-hidden="true"></div>
+<div class="paper-mud-overlay" aria-hidden="true"></div>
+<div class="paper-wet-overlay" aria-hidden="true"></div>
+<div id="root">
+  <slot />
+</div>
+<script>
+  import "../scripts/theme-toggle.ts";
+  import "../scripts/motion.ts";
+</script>
+</body>
+</html>

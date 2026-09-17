@@ -1,0 +1,92 @@
+---
+import { Image } from "astro:assets";
+import { ELEMENTS, type Lang } from "../content/copy";
+import { ELEMENT_VECTORS } from "../content/elementVectors";
+import ninFirePractice from "../assets/images/nin-fire-practice.png";
+import ember from "../assets/images/ember.png";
+import ninEarthPractice from "../assets/images/nin-earth-practice.png";
+import stone from "../assets/images/stone.png";
+import ninWaterPractice from "../assets/images/nin-water-practice.png";
+import waterBall from "../assets/images/water-ball.png";
+
+interface Props {
+  lang: Lang;
+  elementKey: "fire" | "earth" | "water";
+  id: string;
+  kicker: string;
+}
+
+const { lang, elementKey, id, kicker } = Astro.props;
+const el = ELEMENTS[lang].find((e) => e.key === elementKey)!;
+const accent = `var(${el.cssVar})`;
+---
+
+<section id={id} class="element-section">
+  <span class="icon-intro" style={`color:${accent}`} set:html={ELEMENT_VECTORS[elementKey]} aria-hidden="true" />
+  <span class="icon-intro-label" style={`color:${accent}`} aria-hidden="true">{kicker}</span>
+  <div class="section-inner">
+    <div class="section-heading">
+      <span class="section-symbol" style={`color:${accent}`} set:html={ELEMENT_VECTORS[elementKey]} />
+      <p class="kicker" style={`color:${accent}`}>{kicker}</p>
+    </div>
+    <div class="element-section-grid">
+      <div class="element-section-copy" data-reveal={id}>
+        <h2 class="element-section-name" style={`color:${accent}`}>{el.name}</h2>
+        <p class="element-section-desc">{el.desc}</p>
+        {el.principles && (
+          <div class="element-section-principles">
+            {el.principles.map((p, i) => (
+              <div class="principle">
+                <span class="principle-index" style={`color:${accent}`}>{String(i + 1).padStart(2, "0")}</span>
+                <div class="principle-body">
+                  <p class="principle-title" style={`color:${accent}`}>{p.title}</p>
+                  <p class="principle-detail">{p.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {el.itemGroups && (
+          <div class="element-section-item-groups">
+            {el.itemGroups.map((group) => (
+              <div class="item-group">
+                <p class="item-group-label" style={`color:${accent}`}>{group.label}</p>
+                <div class="element-section-items">
+                  {group.items.map((label) => (
+                    <span class="item-pill" style={`--pill-accent:${accent}`}>{label}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {!el.itemGroups && !el.principles && el.items.length > 0 && (
+        <div class="element-section-items" data-reveal={id}>
+          {el.items.map((label) => (
+            <span class="item-pill" style={`--pill-accent:${accent}`}>{label}</span>
+          ))}
+        </div>
+      )}
+      {elementKey === "fire" && (
+        <div class="fire-scene" data-reveal={id}>
+          <Image src={ninFirePractice} alt={lang === "th" ? "นิลมังกรกำลังฝึกควบคุมไฟ" : "NinMangon training to control fire"} width={500} height={565} />
+          <Image src={ember} alt="" class="ember-img" width={300} height={300} />
+          <div class="embers" aria-hidden="true"></div>
+        </div>
+      )}
+      {elementKey === "earth" && (
+        <div class="earth-scene" data-reveal={id}>
+          <Image src={ninEarthPractice} alt={lang === "th" ? "นิลมังกรกำลังฝึกควบคุมดิน" : "NinMangon training to control earth"} width={500} height={659} />
+          <Image src={stone} alt="" class="stone-img" width={300} height={300} />
+        </div>
+      )}
+      {elementKey === "water" && (
+        <div class="water-scene" data-reveal={id}>
+          <Image src={ninWaterPractice} alt={lang === "th" ? "นิลมังกรกำลังฝึกควบคุมน้ำ" : "NinMangon training to control water"} width={500} height={500} />
+          <Image src={waterBall} alt="" class="water-ball-img" width={300} height={300} />
+        </div>
+      )}
+    </div>
+  </div>
+</section>

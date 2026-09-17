@@ -1,0 +1,62 @@
+---
+import { COPY, BRAND, type Lang } from "../content/copy";
+import { ELEMENT_VECTORS } from "../content/elementVectors";
+import LogoMark from "./LogoMark.astro";
+import iconSun from "../assets/vectors/icon-sun.svg?raw";
+import iconMoon from "../assets/vectors/icon-moon.svg?raw";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = COPY[lang];
+
+// pairs each nav link's href with the matching pillar's ring icon + accent
+// color (same .section-symbol art used inside that section) — #contact has
+// no element, so it's simply left out and rendered as plain text
+const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
+  "#passion": { vector: ELEMENT_VECTORS.fire, cssVar: "--fire" },
+  "#hard-skill": { vector: ELEMENT_VECTORS.earth, cssVar: "--earth" },
+  "#soft-skill": { vector: ELEMENT_VECTORS.water, cssVar: "--water" },
+  "#experience": { vector: ELEMENT_VECTORS.wind, cssVar: "--wind" },
+};
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#home" class="logo">
+      <span class="logo-mark"><LogoMark size={32} /></span>
+      <span class="logo-text">{BRAND[lang]}</span>
+    </a>
+    <nav class="nav">
+      {t.nav.map(([href, label]) => {
+        const icon = NAV_ICONS[href];
+        return (
+          <a href={href} class="nav-link">
+            {icon && (
+              <span class="nav-symbol" style={`color:var(${icon.cssVar})`} set:html={icon.vector} />
+            )}
+            {label}
+          </a>
+        );
+      })}
+    </nav>
+    <div class="header-actions">
+      <a
+        href={lang === "en" ? "/th/" : "/"}
+        class="switch lang-switch"
+        data-lang={lang}
+        aria-label={lang === "en" ? "EN, switch to Thai" : "TH, switch to English"}
+      >
+        <span class="switch-knob">{lang === "en" ? "EN" : "TH"}</span>
+      </a>
+      <button type="button" class="switch theme-switch theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+        <span class="switch-knob">
+          <span class="theme-icon theme-icon-sun" set:html={iconSun} />
+          <span class="theme-icon theme-icon-moon" set:html={iconMoon} />
+        </span>
+      </button>
+    </div>
+  </div>
+</header>

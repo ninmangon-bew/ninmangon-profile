@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Hero from "../../components/Hero.astro";
+import ElementSection from "../../components/ElementSection.astro";
+import Experience from "../../components/Experience.astro";
+import Contact from "../../components/Contact.astro";
+import { COPY } from "../../content/copy";
+---
+
+<Layout
+  lang="th"
+  title={COPY.th.meta.title}
+  description={COPY.th.meta.description}
+>
+  <Header lang="th" />
+  <main>
+    <Hero lang="th" />
+    <ElementSection lang="th" elementKey="fire" id="passion" kicker="Passion" />
+    <ElementSection lang="th" elementKey="earth" id="hard-skill" kicker="Hard Skills" />
+    <ElementSection lang="th" elementKey="water" id="soft-skill" kicker="Soft Skills" />
+    <Experience lang="th" />
+    <Contact lang="th" />
+  </main>
+</Layout>
