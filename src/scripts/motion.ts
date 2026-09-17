@@ -655,6 +655,51 @@ function setupWaterPrinciples(): void {
   });
 }
 
+// Every ScrollTrigger start/end position above was computed the moment each
+// setup*() ran, against whatever the page's layout happened to be at that
+// instant — before the self-hosted Thai web fonts have swapped in (their
+// metrics differ from the fallback font, so text reflows once they land) and
+// before every below-the-fold image has finished loading. On a slow mobile
+// connection (in-app browsers like LINE's are a common case — often a dated
+// WebView on a throttled connection) that gap can be seconds long, so by the
+// time the user actually scrolls, every trigger below the fold is anchored
+// to stale (too-short) coordinates and never fires — sections stay at their
+// [data-reveal] opacity:0 resting state forever. Recomputing once both the
+// fonts and every resource have actually finished settles this permanently.
+function setupScrollTriggerRefresh(): void {
+  document.fonts?.ready?.then(() => ScrollTrigger.refresh()).catch(() => {});
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+}
+
+// Belt-and-suspenders on top of the refresh above: if a [data-reveal]
+// element ever becomes visible in the viewport (a plain IntersectionObserver
+// check — independent of Lenis/ScrollTrigger, so it isn't fooled by the same
+// WebView quirks that might break those) and is still sitting at opacity:0
+// after a generous grace period, force it visible. Content should never be
+// permanently hidden by a decorative entrance animation failing to fire.
+function setupRevealFallback(): void {
+  if (reduceMotion) return;
+
+  const seen = new WeakSet<Element>();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || seen.has(entry.target)) return;
+        seen.add(entry.target);
+        const el = entry.target as HTMLElement;
+        window.setTimeout(() => {
+          if (parseFloat(getComputedStyle(el).opacity) < 1) {
+            gsap.set(el, { opacity: 1, y: 0, x: 0 });
+          }
+        }, 1800);
+      });
+    },
+    { threshold: 0.1 },
+  );
+
+  document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => observer.observe(el));
+}
+
 setupHeaderScrollOffset();
 restoreHashScroll();
 setupLenis();
@@ -670,4 +715,6 @@ setupWaterWetOverlay();
 setupIconIntroSections();
 setupWaterPrinciples();
 setupEarthStone();
+setupScrollTriggerRefresh();
+setupRevealFallback();
 setupLangSwitch();
