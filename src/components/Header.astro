@@ -1,5 +1,5 @@
 ---
-import { COPY, BRAND, type Lang } from "../content/copy";
+import { COPY, BRAND, PORTFOLIO_COPY, type Lang } from "../content/copy";
 import { ELEMENT_VECTORS } from "../content/elementVectors";
 import LogoMark from "./LogoMark.astro";
 import iconSun from "../assets/vectors/icon-sun.svg?raw";
@@ -11,6 +11,10 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = COPY[lang];
+const home = lang === "en" ? "/" : "/th/";
+const portfolio = `${home}portfolio/`;
+const isPortfolio = Astro.url.pathname.includes("/portfolio");
+const alternate = lang === "en" ? `/th${Astro.url.pathname}` : Astro.url.pathname.replace(/^\/th/, "");
 
 // pairs each nav link's href with the matching pillar's ring icon + accent
 // color (same .section-symbol art used inside that section) — #contact has
@@ -25,7 +29,7 @@ const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="#home" class="logo">
+    <a href={isPortfolio ? home : "#home"} class="logo">
       <span class="logo-mark"><LogoMark size={32} /></span>
       <span class="logo-text">{BRAND[lang]}</span>
     </a>
@@ -33,7 +37,7 @@ const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
       {t.nav.map(([href, label]) => {
         const icon = NAV_ICONS[href];
         return (
-          <a href={href} class="nav-link">
+          <a href={isPortfolio ? `${home}${href}` : href} class="nav-link">
             {icon && (
               <span class="nav-symbol" style={`color:var(${icon.cssVar})`} set:html={icon.vector} />
             )}
@@ -41,10 +45,11 @@ const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
           </a>
         );
       })}
+      <a href={portfolio} class="nav-link" aria-current={isPortfolio ? "page" : undefined}>{PORTFOLIO_COPY[lang].nav}</a>
     </nav>
     <div class="header-actions">
       <a
-        href={lang === "en" ? "/th/" : "/"}
+        href={alternate || "/"}
         class="switch lang-switch"
         data-lang={lang}
         aria-label={lang === "en" ? "EN, switch to Thai" : "TH, switch to English"}

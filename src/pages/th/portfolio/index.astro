@@ -1,0 +1,9 @@
+﻿---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Portfolio from '../../../components/Portfolio.astro';
+import { PORTFOLIO_COPY } from '../../../content/copy';
+---
+<Layout lang="th" title="ผลงาน | NinMangon · UX/UI Designer" description={PORTFOLIO_COPY.th.intro}>
+  <Header lang="th" /><Portfolio lang="th" />
+</Layout>

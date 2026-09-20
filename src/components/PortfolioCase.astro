@@ -1,0 +1,81 @@
+﻿---
+import { Image } from 'astro:assets';
+import { PORTFOLIO_COPY, PORTFOLIO_PROJECTS, type Lang, type PortfolioProject } from '../content/copy';
+import { portfolioImage } from '../content/portfolioImages';
+import iconArrow from '../assets/vectors/icon-arrow.svg?raw';
+interface Props { lang: Lang; project: PortfolioProject }
+const { lang, project } = Astro.props;
+const t = PORTFOLIO_COPY[lang];
+const content = project[lang];
+const base = lang === 'en' ? '/portfolio/' : '/th/portfolio/';
+const next = PORTFOLIO_PROJECTS[(PORTFOLIO_PROJECTS.findIndex(p => p.slug === project.slug) + 1) % PORTFOLIO_PROJECTS.length];
+---
+<main id="main-content" class:list={['portfolio-main', 'case-main', { 'case-has-external': project.externalLink }]} style={`--project-accent:var(--${project.category === 'web' ? 'gold' : 'ux'}-text)`}>
+  <div class="portfolio-shell">
+    <nav class="case-breadcrumb" aria-label={t.nav}><a href={base}>{t.back}</a><span aria-hidden="true">/</span><span aria-current="page">{project.name}</span></nav>
+    <header class="case-header">
+      <p class="kicker">{project.category === 'web' ? t.webLabel : t.uxLabel}</p>
+      <h1>{project.name}</h1><p class="portfolio-lead">{content.summary}</p>
+      {project.externalLink && (
+        <div class="hero-actions" data-case-cta>
+          <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer">
+            {project.externalLink.label[lang]}
+            <span class="icon-arrow" aria-hidden="true" set:html={iconArrow} />
+          </a>
+        </div>
+      )}
+      <dl class="case-meta"><div><dt>{t.type}</dt><dd>{project.platform}</dd></div><div><dt>{t.role}</dt><dd>{project.tags.join(' · ')}</dd></div></dl>
+    </header>
+    <div class="case-cover"><Image src={portfolioImage(project.slug)} alt={`${project.name} · ${project.platform}`} loading="eager" widths={[640, 1000, 1400]} sizes="(max-width: 1240px) 100vw, 1240px" /></div>
+    <section class="case-goal"><p class="kicker">{t.goal}</p><p>{content.goal}</p></section>
+    <div class="case-body">
+      <aside class="case-toc"><p class="kicker">{t.detailLabel}</p><nav aria-label={t.detailTitle}>{content.sections.map((section, i) => <a href={`#chapter-${i + 1}`}><span>0{i + 1}</span>{section.title}</a>)}</nav></aside>
+      <div class="case-chapters">
+        {content.sections.map((section, i) => (
+          <section class="case-chapter" id={`chapter-${i + 1}`}>
+            <span class="case-number" aria-hidden="true">0{i + 1}</span><h2>{section.title}</h2>
+            {section.paragraphs.map(paragraph => <p>{paragraph}</p>)}
+            {section.images && <div class:list={['case-images', { 'case-images-pair': section.images.length > 1 }]}>{section.images.map((name, imageIndex) => <figure><Image src={portfolioImage(name)} alt={`${project.name}: ${section.title} (${imageIndex + 1})`} widths={[400, 800, 1200]} sizes="(max-width: 700px) 90vw, 800px" loading="lazy" /></figure>)}</div>}
+          </section>
+        ))}
+      </div>
+    </div>
+    <footer class="case-footer">
+      <a href={base} class="case-back"><span class="icon-arrow icon-arrow-back" aria-hidden="true" set:html={iconArrow} />{t.back}</a>
+      <a href={`${base}${next.slug}/`} class="case-next"><span>{t.next}</span><strong>{next.name}<span class="icon-arrow" aria-hidden="true" set:html={iconArrow} /></strong></a>
+    </footer>
+  </div>
+  {project.externalLink && (
+    <aside class="case-cta-dock" data-case-cta-dock hidden>
+      <span class="case-cta-project">{project.name}</span>
+      <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer">
+        {project.externalLink.label[lang]}
+        <span class="icon-arrow" aria-hidden="true" set:html={iconArrow} />
+      </a>
+    </aside>
+  )}
+</main>
+
+<script>
+  const original = document.querySelector<HTMLElement>('[data-case-cta]');
+  const dock = document.querySelector<HTMLElement>('[data-case-cta-dock]');
+  const header = document.querySelector<HTMLElement>('.site-header');
+
+  if (original && dock) {
+    let observer: IntersectionObserver;
+    const observeCTA = () => {
+      observer?.disconnect();
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      observer = new IntersectionObserver(([entry]) => {
+        const showDock = entry.boundingClientRect.bottom < headerHeight;
+        if (!showDock && dock.contains(document.activeElement)) {
+          original.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+        }
+        dock.hidden = !showDock;
+      }, { rootMargin: `-${headerHeight}px 0px 0px 0px` });
+      observer.observe(original);
+    };
+    observeCTA();
+    if (header) new ResizeObserver(observeCTA).observe(header);
+  }
+</script>

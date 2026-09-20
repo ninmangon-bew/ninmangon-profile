@@ -18,9 +18,10 @@ interface Props {
 const { lang, title, description, ogImage = "/og-image.png" } = Astro.props;
 
 const site = Astro.site ?? new URL("http://localhost:4321");
-const canonicalURL = new URL(lang === "en" ? "/" : "/th/", site).toString();
-const enURL = new URL("/", site).toString();
-const thURL = new URL("/th/", site).toString();
+const pagePath = Astro.url.pathname.replace(/^\/th(?=\/|$)/, "") || "/";
+const enURL = new URL(pagePath, site).toString();
+const thURL = new URL(`/th${pagePath}`, site).toString();
+const canonicalURL = lang === "en" ? enURL : thURL;
 const ogImageURL = new URL(ogImage, site).toString();
 
 const personSchema = {
@@ -29,7 +30,7 @@ const personSchema = {
   name: "Nadchanon Susutlertpanya",
   alternateName: ["นัสชานนท์ สุสุตเลิศปัญญา", "NINMANGON", "นิลมังกร"],
   jobTitle: "Senior UX/UI Designer",
-  url: enURL,
+  url: new URL("/", site).toString(),
   image: ogImageURL,
   sameAs: ["https://www.linkedin.com/in/nadchanon-susutlertpanya-52257a322"],
 };

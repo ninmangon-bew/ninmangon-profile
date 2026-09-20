@@ -1,0 +1,12 @@
+﻿---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import PortfolioCase from '../../../components/PortfolioCase.astro';
+import { PORTFOLIO_PROJECTS, type PortfolioProject } from '../../../content/copy';
+export function getStaticPaths() { return PORTFOLIO_PROJECTS.map(project => ({ params: { slug: project.slug }, props: { project } })); }
+interface Props { project: PortfolioProject }
+const { project } = Astro.props;
+---
+<Layout lang="th" title={`${project.name} | ผลงาน · NinMangon`} description={project.th.summary}>
+  <Header lang="th" /><PortfolioCase lang="th" project={project} />
+</Layout>
