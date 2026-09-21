@@ -38,7 +38,7 @@ const els = ELEMENTS[lang];
       <p class="hero-role">{t.hero.role}</p>
       <p class="hero-desc">{t.hero.desc}</p>
       <div class="hero-actions">
-        <a href={lang === "en" ? "/portfolio/" : "/th/portfolio/"} class="btn btn-primary">{t.hero.ctaWork}</a>
+        <a href="https://peachn.co/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">{t.hero.ctaWork}</a>
         <a href={lang === "en" ? "/portfolio/" : "/th/portfolio/"} class="btn btn-secondary">{t.hero.ctaAllWork}</a>
         <a href="/cv.pdf" download="Nadchanon-Susutlertpanya-CV.pdf" class="btn btn-secondary">
           <span class="btn-icon" aria-hidden="true" set:html={iconDownload} />
