@@ -27,15 +27,15 @@ const t = COPY[lang];
       <h2 class="section-title contact-title">{t.contact.title}</h2>
       <p class="body-text">{t.contact.desc}</p>
       <div class="contact-actions">
-        <a href="mailto:bewblue12@gmail.com" class="btn btn-primary">
+        <a href="mailto:bewblue12@gmail.com" class="btn btn-primary" data-track="contact_email">
           <span class="btn-icon" set:html={iconMail} />
           bewblue12@gmail.com
         </a>
-        <a href="tel:0944623916" class="btn btn-secondary">
+        <a href="tel:0944623916" class="btn btn-secondary" data-track="contact_phone">
           <span class="btn-icon" set:html={iconPhone} />
           094 462 3916
         </a>
-        <a href="https://www.linkedin.com/in/nadchanon-susutlertpanya-52257a322" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.linkedin.com/in/nadchanon-susutlertpanya-52257a322" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" data-track="contact_linkedin">
           <span class="btn-icon" set:html={iconLinkedin} />
           LinkedIn
         </a>

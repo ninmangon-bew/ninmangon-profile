@@ -24,7 +24,7 @@ const base = lang === 'en' ? '/portfolio/' : '/th/portfolio/';
         <div class:list={['portfolio-grid', { 'portfolio-web-grid': category === 'web' }]}>
           {PORTFOLIO_PROJECTS.filter(p => p.category === category).map((project, i) => (
             <article class:list={['project-card', { 'project-featured': category === 'web' && i === 0 }]} style={`--project-accent:var(--${project.category === 'web' ? 'gold' : 'ux'}-text)`}>
-              <a href={`${base}${project.slug}/`} class="project-link">
+              <a href={`${base}${project.slug}/`} class="project-link" data-track="portfolio_card" data-track-item={project.slug}>
                 <div class="project-image"><Image src={portfolioImage(project.slug)} alt={`${project.name} · ${project.platform}`} widths={[480, 800, 1200]} sizes="(max-width: 700px) 100vw, 60vw" loading={category === 'web' && i === 0 ? 'eager' : 'lazy'} /></div>
                 <div class="project-card-copy">
                   <p class="project-platform">{project.platform}</p>

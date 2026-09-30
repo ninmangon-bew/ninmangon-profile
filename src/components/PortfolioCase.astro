@@ -18,7 +18,7 @@ const next = PORTFOLIO_PROJECTS[(PORTFOLIO_PROJECTS.findIndex(p => p.slug === pr
       <h1>{project.name}</h1><p class="portfolio-lead">{content.summary}</p>
       {project.externalLink && (
         <div class="hero-actions" data-case-cta>
-          <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer">
+          <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer" data-track="case_live_site" data-track-item={project.slug}>
             {project.externalLink.label[lang]}
             <span class="icon-arrow" aria-hidden="true" set:html={iconArrow} />
           </a>
@@ -42,13 +42,13 @@ const next = PORTFOLIO_PROJECTS[(PORTFOLIO_PROJECTS.findIndex(p => p.slug === pr
     </div>
     <footer class="case-footer">
       <a href={base} class="case-back"><span class="icon-arrow icon-arrow-back" aria-hidden="true" set:html={iconArrow} />{t.back}</a>
-      <a href={`${base}${next.slug}/`} class="case-next"><span>{t.next}</span><strong>{next.name}<span class="icon-arrow" aria-hidden="true" set:html={iconArrow} /></strong></a>
+      <a href={`${base}${next.slug}/`} class="case-next" data-track="case_next_project" data-track-item={next.slug}><span>{t.next}</span><strong>{next.name}<span class="icon-arrow" aria-hidden="true" set:html={iconArrow} /></strong></a>
     </footer>
   </div>
   {project.externalLink && (
     <aside class="case-cta-dock" data-case-cta-dock hidden>
       <span class="case-cta-project">{project.name}</span>
-      <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer">
+      <a class="btn btn-primary" href={project.externalLink.href} target="_blank" rel="noopener noreferrer" data-track="case_live_site_dock" data-track-item={project.slug}>
         {project.externalLink.label[lang]}
         <span class="icon-arrow" aria-hidden="true" set:html={iconArrow} />
       </a>

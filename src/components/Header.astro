@@ -37,7 +37,7 @@ const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
       {t.nav.map(([href, label]) => {
         const icon = NAV_ICONS[href];
         return (
-          <a href={isPortfolio ? `${home}${href}` : href} class="nav-link">
+          <a href={isPortfolio ? `${home}${href}` : href} class="nav-link" data-track={`nav_${href.replace("#", "")}`}>
             {icon && (
               <span class="nav-symbol" style={`color:var(${icon.cssVar})`} set:html={icon.vector} />
             )}
@@ -45,18 +45,19 @@ const NAV_ICONS: Record<string, { vector: string; cssVar: string }> = {
           </a>
         );
       })}
-      <a href={portfolio} class="nav-link" aria-current={isPortfolio ? "page" : undefined}>{PORTFOLIO_COPY[lang].nav}</a>
+      <a href={portfolio} class="nav-link" aria-current={isPortfolio ? "page" : undefined} data-track="nav_portfolio">{PORTFOLIO_COPY[lang].nav}</a>
     </nav>
     <div class="header-actions">
       <a
         href={alternate || "/"}
         class="switch lang-switch"
+        data-track="switch_language"
         data-lang={lang}
         aria-label={lang === "en" ? "EN, switch to Thai" : "TH, switch to English"}
       >
         <span class="switch-knob">{lang === "en" ? "EN" : "TH"}</span>
       </a>
-      <button type="button" class="switch theme-switch theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <button type="button" class="switch theme-switch theme-toggle" id="themeToggle" aria-label="Toggle color theme" data-track="switch_theme">
         <span class="switch-knob">
           <span class="theme-icon theme-icon-sun" set:html={iconSun} />
           <span class="theme-icon theme-icon-moon" set:html={iconMoon} />
